@@ -7,31 +7,13 @@ import isAdmin from "../middlewares/isAdmin.js";
 
 const reservationRouter = Router();
 
-//get all reservations (admin) ??? Ask Nilton
-reservationRouter.get("/reservations/", isAuthenticated, attachCurrentUser, isAdmin, async (req, res) =>{
+//get all reservations (admin) ??
+reservationRouter.get("/reservations", isAuthenticated, attachCurrentUser, isAdmin, async (req, res) =>{
     try{
-        const reservation = await Reservation.find({})
-        return res.status(200).json(reservation)
-    }catch(err){
-        console.log(err)
-        return res.status(500).json({msg: "Interval server error"})
-    }
-})
-
-//get all reservations for an area (admin) ??? Ask Nilton
-reservationRouter.get("/reservations/area/:areaId", isAuthenticated, attachCurrentUser, isAdmin, async (req, res) =>{
-    try{
-
-        const {areaId} = req.params
-        const parkingSpots = await ParkingSpot.find({parkingSpotArea: areaId}, "-cordinates -reserved -parkingSpotArea -__v")
-        const parkingSpotIdArray = parkingSpots.map( ps => ps._id )
-        console.log(parkingSpotIdArray)
-        console.log(parkingSpots)
-        const reservations = await Reservation.find({
-            "parkingSpot" : {
-                $in: parkingSpotIdArray
-            }
-        })
+        let reservations = await Reservation.find({}, "-__v").populate("parkingSpot")
+        if (req.query && req.query.area){
+            reservations = reservations.filter( reservation => reservation.parkingSpot.area === req.query.area )
+        }
         return res.status(200).json(reservations)
     }catch(err){
         console.log(err)
@@ -39,10 +21,10 @@ reservationRouter.get("/reservations/area/:areaId", isAuthenticated, attachCurre
     }
 })
 
-//get all reservation for a user ??? Ask Nilton
+//get all reservation for a user
 reservationRouter.get("/reservations/me", isAuthenticated, attachCurrentUser, async (req, res) =>{
     try{
-        const reservation = await Reservation.find({userId: req.currentUser._id})
+        const reservation = await Reservation.find({userId: req.currentUser._id}, "-__v")
         return res.status(200).json(reservation)
     }catch(err){
         console.log(err)
@@ -50,12 +32,14 @@ reservationRouter.get("/reservations/me", isAuthenticated, attachCurrentUser, as
     }
 })
 
+// create a reservation
 reservationRouter.post("/reservations",  isAuthenticated, attachCurrentUser, async (req, res) =>{
+    // add validation if user has active reservaion dont allow a new one
     try{
         const reservation = await Reservation.create({
                                             ...req.body, 
                                             userId: req.currentUser._id})
-
+        reservation.__v = undefined
         return res.status(201).json(reservation)
     }catch(err){
         console.log(err)
@@ -66,9 +50,7 @@ reservationRouter.post("/reservations",  isAuthenticated, attachCurrentUser, asy
 reservationRouter.get("/reservations/:reservationId", isAuthenticated, attachCurrentUser,  async (req, res) =>{
     try{
         const {reservationId} = req.params
-        const reservation = await Reservation.findOne({_id: reservationId})
-        console.log("reservationId: ", reservationId)
-        console.log("reservation: ", reservation)
+        const reservation = await Reservation.findOne({_id: reservationId}, "-__v")
         if(!reservation){
             return res.status(400).json({msg: "Invalid request"})
         }
@@ -118,6 +100,7 @@ reservationRouter.patch("/reservations/:reservationId",  isAuthenticated, attach
         }
         const payload = req.body
         const updatedreservation = await Reservation.findByIdAndUpdate(reservationId, payload, {new: true})
+        updatedreservation.__v = undefined
         if(!updatedreservation){
             res.status(400).json({msg: "Invalid request"})
         }

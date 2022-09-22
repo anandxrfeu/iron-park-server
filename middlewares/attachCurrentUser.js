@@ -4,7 +4,6 @@ const attachCurrentUser = async (req, res, next) => {
   try {
     // Ver linha 14 do arquivo isAuthenticated.js
     const loggedInUser = req.user;
-    console.log("loggedInUser -> ",loggedInUser)
     const user = await User.findOne(
       { _id: loggedInUser._id },
       { password: 0, __v: 0 } // Excluindo o hash da senha da resposta que vai pro servidor, por segurança

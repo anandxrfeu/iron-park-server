@@ -5,8 +5,6 @@ function extractTokenFromHeaders(req, res) {
     // O throw tem o mesmo efeito do return de encerrar a execução da função
     throw new Error("Missing Authorization Header.");
   }
-
-  console.log("req.headers.authorization -> ", req.headers.authorization)
   return req.headers.authorization.split(" ")[1];
 }
 
