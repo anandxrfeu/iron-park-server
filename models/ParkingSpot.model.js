@@ -21,24 +21,7 @@ const parkingSpotSchema = new Schema({
         }
     },
     area:{
-        name:{
-            type: String,
-        }, 
-        address:{
-            type: String,
-        },
-        coordinates:{
-            latitude: {
-                type: String,
-                required: true,
-                //add validation
-            },
-            longitude: {
-                type: String,
-                required: true,
-                //add validation
-            }
-        }
+        type: String
     }
 }, {
     timestamps: true
