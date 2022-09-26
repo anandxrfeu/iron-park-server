@@ -11,7 +11,7 @@ cloudinary.config({
 const storage = new CloudinaryStorage({
   cloudinary: cloudinary,
   params: {
-    folder: "pictures",
+    folder: "pictures", 
     format: async (req, file) => "png",
     use_filename: true,
   },
@@ -19,4 +19,4 @@ const storage = new CloudinaryStorage({
 
 const fileUpload = multer({ storage: storage });
 
-module.exports = fileUpload
+export default fileUpload;

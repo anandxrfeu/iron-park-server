@@ -3,7 +3,7 @@ import express from 'express'
 import cors from 'cors'
 import dbConnect from './config/db.config.js'
 import userRouter from './routes/user.routes.js'
-import areaRouter from './routes/area.routes.js'
+import fileRouter from './routes/file.routes.js'
 import parkingSpotRouter from './routes/parkingSpot.routes.js'
 import reservationRouter from './routes/reservation.routes.js'
 
@@ -15,8 +15,12 @@ app.use(express.json());
 // Não esquecer de criar variável de ambiente com o endereço do seu app React (local ou no Netlify)
 app.use(cors({ origin: process.env.REACT_APP_URL }));
 
+app.get("/api/health", (req, res)=>{
+  return res.status(200).json({ok: true})
+})
 app.use("/api", userRouter);
-app.use("/api", areaRouter);
+app.use("/api", userRouter);
+app.use("/api", fileRouter);
 app.use("/api", parkingSpotRouter);
 app.use("/api", reservationRouter);
 

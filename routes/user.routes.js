@@ -53,6 +53,7 @@ userRouter.post("/users/login", async (req, res) => {
           email: user.email,
           _id: user._id,
           role: user.role,
+          profileImageUrl: user.profileImageUrl,
         },
         token,
       });
@@ -94,6 +95,8 @@ userRouter.patch("/users/profile", isAuthenticated, attachCurrentUser, async (re
     const loggedInUser = req.currentUser;
     requestedUpdates.forEach(update => loggedInUser[update] = req.body[update])
     await loggedInUser.save()
+    loggedInUser.createdAt = undefined
+    loggedInUser.updatedAt = undefined
     return res.status(200).json(loggedInUser)
   } catch (err) {
     console.error(err);
