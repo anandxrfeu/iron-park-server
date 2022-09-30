@@ -59,7 +59,7 @@ parkingSpotRouter.delete("/parkingspots/:parkingspotId", isAuthenticated, attach
     }
 })
 
-parkingSpotRouter.patch("/parkingspots/:parkingspotId", isAuthenticated, attachCurrentUser, isAdmin, async (req, res) =>{
+parkingSpotRouter.patch("/parkingspots/:parkingspotId", isAuthenticated, attachCurrentUser, async (req, res) =>{
     try{
 
         const allowedOperations = ["coordinates", "reserved"]

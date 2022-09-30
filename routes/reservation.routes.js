@@ -57,6 +57,7 @@ reservationRouter.get("/reservations/:reservationId", isAuthenticated, attachCur
         if(reservation.userId.toString() !== req.currentUser._id.toString()){
             return res.status(400).json({msg :"Not authorized"})
         }
+        await reservation.populate("userId").execPopulate()
         return res.status(200).json(reservation)
     }catch(err){
         console.log(err)
