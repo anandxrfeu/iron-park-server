@@ -6,6 +6,7 @@ import userRouter from './routes/user.routes.js'
 import fileRouter from './routes/file.routes.js'
 import parkingSpotRouter from './routes/parkingSpot.routes.js'
 import reservationRouter from './routes/reservation.routes.js'
+import stripe from './routes/stripe.routes.js'
 
 dbConnect()
 
@@ -19,10 +20,10 @@ app.get("/api/health", (req, res)=>{
   return res.status(200).json({ok: true})
 })
 app.use("/api", userRouter);
-app.use("/api", userRouter);
 app.use("/api", fileRouter);
 app.use("/api", parkingSpotRouter);
 app.use("/api", reservationRouter);
+app.use("/api", stripe);
 
 app.listen(Number(process.env.EXPRESS_PORT), () =>
   console.log(`Server up and running at port ${process.env.EXPRESS_PORT}`)
