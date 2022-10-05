@@ -58,6 +58,9 @@ reservationRouter.get("/reservations/:reservationId", isAuthenticated, attachCur
             return res.status(400).json({msg :"Not authorized"})
         }
         await reservation.populate("userId").execPopulate()
+        reservation.userId.password = undefined
+        reservation.userId.__v = undefined
+        await reservation.populate("parkingSpot").execPopulate()
         return res.status(200).json(reservation)
     }catch(err){
         console.log(err)
