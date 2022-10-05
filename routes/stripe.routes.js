@@ -53,31 +53,3 @@ paymentRouter.post('/create-checkout-session', async (req, res) => {
   });
 
 export default paymentRouter;
-
-
-  // onst calculateOrderAmount = (items) => {
-  //     // Replace this constant with a calculation of the order's amount
-  //     // Calculate the order total on the server to prevent
-  //     // people from directly manipulating the amount on the client
-  //     console.log("items -> ",items)
-  //     return 1400;
-  //   };
-  
-  // paymentRouter.post("/create-payment-intent", async (req, res) => {
-  //     try{
-  //         const { items } = req.body;
-  //         console.log("req.body -> ", req.body)
-  //         // Create a PaymentIntent with the order amount and currency
-  //         const paymentIntent = await stripe.paymentIntents.create({
-  //             amount: calculateOrderAmount(items),
-  //             currency: "brl",
-  //             automatic_payment_methods: {
-  //                 enabled: true,
-  //             },
-  //         });
-  //         console.log("stripe -> ", paymentIntent)
-  //         return res.status(201).json({clientSecret: paymentIntent.client_secret});
-  //     }catch(err){
-  //         console.log(err)
-  //     }
-  // })

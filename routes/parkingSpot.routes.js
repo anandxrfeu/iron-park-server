@@ -32,10 +32,21 @@ parkingSpotRouter.get("/parkingspots/:parkingspotId", async (req, res) =>{
 })
 
 parkingSpotRouter.get("/parkingspots", async (req, res) => {
+
+    const filterByArea = req.query.area ? true : false
+    const filterByCordinates = (req.query.longitude &&  req.query.latitude)  ? true : false
+
+    let filterQuery = {}
+    if(filterByArea){
+        filterQuery = {area: req.query.area}
+    } else if (filterByCordinates){
+        filterQuery =  { $and: [ {"area.coordinates.longitude": req.query.longitude }, {"area.coordinates.latitude": req.query.latitude}]}
+    }
+
     try{
-        const parkingSpots = await ParkingSpot.find(
-            req.query.area ? {area: req.query.area} : {}
-            , "-__v")
+        const parkingSpots = await ParkingSpot.find(filterQuery, "-__v")
+           // req.query.area ? {area: req.query.area} : {}
+            
         return res.status(200).json(parkingSpots)
 
     }catch(err){
