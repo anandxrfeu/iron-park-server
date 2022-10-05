@@ -12,9 +12,20 @@ dbConnect()
 
 const app = express();
 
-app.use(express.json());
+var whitelist = [process.env.REACT_WEB_APP_URL]
+var corsOptions = {
+  origin: function (origin, callback) {
+    if (whitelist.indexOf(origin) !== -1) {
+      callback(null, true)
+    } else {
+      callback(new Error('Not allowed by CORS'))
+    }
+  }
+}
+
 // Não esquecer de criar variável de ambiente com o endereço do seu app React (local ou no Netlify)
 //app.use(cors({ origin: process.env.REACT_APP_URL }));
+app.use(cors())
 
 app.get("/api/health", (req, res)=>{
   return res.status(200).json({ok: true})
