@@ -36,8 +36,8 @@ app.use("/api", parkingSpotRouter);
 app.use("/api", reservationRouter);
 app.use("/api", stripe);
 
-app.listen(Number(process.env.EXPRESS_PORT), () =>
-  console.log(`Server up and running at port ${process.env.EXPRESS_PORT}`)
+app.listen(Number(process.env.PORT), () =>
+  console.log(`Server up and running at port ${process.env.PORT}`)
 );
 
 import Reservation from './models/Reservation.model.js'
